@@ -39,9 +39,9 @@ export default function Home(): JSX.Element {
         setErrors(validation);
         return;
       }
-      const bpmnXml = jsonToBpmnXml(json);
-      setXml(bpmnXml);
-      await canvasRef.current?.importXml(bpmnXml);
+      const laidOut = jsonToBpmnXml(json);
+      setXml(laidOut);
+      await canvasRef.current?.importXml(laidOut);
       await canvasRef.current?.zoomToFit();
     } catch (e: any) {
       setErrors([e?.message ?? 'Unbekannter Fehler beim Generieren']);
@@ -62,9 +62,9 @@ export default function Home(): JSX.Element {
         setErrors(validation);
         return;
       }
-      const bpmnXml = jsonToBpmnXml(json);
-      setXml(bpmnXml);
-      await canvasRef.current?.importXml(bpmnXml);
+      const laidOut = jsonToBpmnXml(json);
+      setXml(laidOut);
+      await canvasRef.current?.importXml(laidOut);
       await canvasRef.current?.zoomToFit();
     } catch (e: any) {
       setErrors([e?.message ?? 'Unbekannter Fehler beim Verbessern']);
