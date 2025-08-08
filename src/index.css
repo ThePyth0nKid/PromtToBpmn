@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+/* Design Tokens */
+@theme {
+  --color-background: hsl(0 0% 100%);
+  --color-foreground: hsl(222 47% 11%);
+  --color-muted: hsl(210 40% 96%);
+  --color-muted-foreground: hsl(215 16% 47%);
+  --color-primary: hsl(221 83% 53%);
+  --color-primary-foreground: hsl(0 0% 100%);
+  --color-border: hsl(220 13% 91%);
+}
+
+:root.dark {
+  --color-background: hsl(222 47% 11%);
+  --color-foreground: hsl(210 40% 98%);
+  --color-muted: hsl(217 32% 17%);
+  --color-muted-foreground: hsl(215 20% 65%);
+  --color-primary: hsl(217 91% 60%);
+  --color-primary-foreground: hsl(0 0% 100%);
+  --color-border: hsl(215 28% 17%);
+}
+
+html, body, #root { height: 100%; }
+
+/* Utility helpers */
+.container { max-width: 1280px; margin-inline: auto; padding-inline: 1rem; }
+.card { @apply rounded-lg border border-border bg-background shadow-sm; }
+.btn { @apply inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium border border-border bg-muted hover:bg-border; }
+.btn-primary { @apply bg-primary text-primary-foreground hover:opacity-90; }
+.input { @apply w-full rounded-md border border-border bg-background px-3 py-2; }
+.text-muted { color: var(--color-muted-foreground); }
+
+/* bpmn-js container should fill area */
+.bpmn-container { height: calc(100vh - 6rem); }

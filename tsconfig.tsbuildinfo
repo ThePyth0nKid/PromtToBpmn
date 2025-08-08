@@ -1,0 +1,1 @@
+{"root":["./src/main.tsx","./src/pages/home.tsx","./src/services/bpmn.ts","./src/services/export.ts","./src/services/llm.ts","./src/services/types.ts","./src/services/validate.ts","./src/ui/bpmncanvas.tsx","./src/ui/promptpanel.tsx","./src/ui/voiceinput.tsx"],"version":"5.9.2"}
