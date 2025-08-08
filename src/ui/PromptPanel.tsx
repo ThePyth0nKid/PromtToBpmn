@@ -43,7 +43,7 @@ export default function PromptPanel({ value, onChange, onGenerate, onImprove, lo
       </label>
       <textarea
         id="prompt"
-        className="input min-h-[240px] flex-1"
+        className="chat-input"
         placeholder={
           'Beispiel: Wenn eine neue Bestellung eingeht, prüfe den Lagerbestand, reserviere Artikel, sende Bestellbestätigung, starte Versandvorbereitung und schließe den Prozess ab.'
         }

@@ -26,30 +26,59 @@
 }
 
 html, body, #root { height: 100%; }
+body { overflow: hidden; }
+
+/* Background gradient */
+body {
+  background: radial-gradient(1200px 700px at 80% 20%, hsla(45, 90%, 70%, 0.35), transparent),
+              radial-gradient(1000px 800px at 20% 80%, hsla(260, 90%, 70%, 0.25), transparent),
+              linear-gradient(180deg, hsl(210 60% 98%), hsl(0 0% 100%));
+  color: var(--color-foreground);
+}
+:root.dark body {
+  background: radial-gradient(1200px 700px at 80% 20%, hsla(45, 90%, 60%, 0.15), transparent),
+              radial-gradient(1000px 800px at 20% 80%, hsla(260, 90%, 60%, 0.15), transparent),
+              linear-gradient(180deg, hsl(222 50% 10%), hsl(222 47% 12%));
+}
 
 /* Utility helpers */
-.container { max-width: 1440px; margin-inline: auto; padding-inline: 1rem; }
-.card { @apply rounded-lg border border-border bg-background shadow-sm; }
+.container { max-width: 1280px; margin-inline: auto; padding-inline: 1rem; }
+.card { @apply rounded-2xl border border-border bg-background/80 shadow-lg backdrop-blur; }
 .btn { @apply inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium border border-border bg-muted hover:bg-border; }
 .btn-primary { @apply bg-primary text-primary-foreground hover:opacity-90; }
-.input { @apply w-full rounded-md border border-border bg-background px-3 py-2; }
+.input { @apply w-full rounded-xl border border-border bg-background/80 px-4 py-3; }
 .text-muted { color: var(--color-muted-foreground); }
 
+/* Navbar (fix height variable) */
+.navbar { @apply sticky top-0 z-20 border-b border-border/60 backdrop-blur bg-background/70; height: 56px; }
+
+/* Fullscreen canvas layer (background-like) */
+.canvas-fixed { position: fixed; top: 56px; left: 0; right: 0; bottom: 0; z-index: 1; }
+
+/* Overlay (chat) über Canvas */
+.canvas-overlay { position: absolute; left: 12px; right: 120px; bottom: 16px; pointer-events: none; display: flex; justify-content: center; }
+@media (max-width: 768px) { .canvas-overlay { right: 12px; } }
+
 /* BPMN host and palette positioning */
-.bpmn-host { position: relative; height: calc(100vh - 6rem); padding: 0 72px; }
+.bpmn-host { position: relative; height: 100%; padding: 0 72px; }
 .bpmn-container { height: 100%; width: 100%; }
 .djs-container { height: 100% !important; width: 100% !important; }
 .djs-palette { left: auto !important; right: 12px !important; top: 12px !important; }
 
-/* Markers for run status */
+/* Run markers */
 .djs-element.marker-pending .djs-visual > :is(rect,circle,polygon,path) { stroke: var(--color-yellow) !important; stroke-width: 3px !important; }
 .djs-element.marker-running .djs-visual > :is(rect,circle,polygon,path) { stroke: var(--color-blue) !important; stroke-width: 3px !important; }
 .djs-element.marker-success .djs-visual > :is(rect,circle,polygon,path) { stroke: var(--color-green) !important; stroke-width: 3px !important; }
 .djs-element.marker-failure .djs-visual > :is(rect,circle,polygon,path) { stroke: var(--color-red) !important; stroke-width: 3px !important; }
 
-/* Overlay badges */
+/* Overlays */
 .run-badge { font-size: 11px; padding: 2px 6px; border-radius: 999px; color: white; background: var(--color-blue); }
 .run-badge.pending { background: var(--color-yellow); color: black; }
 .run-badge.running { background: var(--color-blue); }
 .run-badge.success { background: var(--color-green); }
 .run-badge.failure { background: var(--color-red); }
+
+/* Chat panel (glassy, compact) */
+.chat-card { border-radius: 12px; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); background: color-mix(in srgb, var(--color-background) 40%, transparent); border: 1px solid color-mix(in srgb, var(--color-border) 35%, transparent); box-shadow: 0 10px 30px rgba(0,0,0,0.06); padding: 0.4rem 0.6rem; }
+.chat-card .input { @apply bg-background/50; }
+.chat-input { @apply w-full rounded-lg border border-border bg-background/50 px-3 py-2 min-h-[72px] md:min-h-[84px]; }
