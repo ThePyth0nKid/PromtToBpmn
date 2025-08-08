@@ -12,13 +12,19 @@ export type BpmnCanvasHandle = {
   exportSvg: () => Promise<string>;
   exportPng: () => Promise<string>;
   zoomToFit: () => Promise<void>;
+  addMarker: (elementId: string, marker: 'pending' | 'running' | 'success' | 'failure') => void;
+  clearMarkers: (elementId?: string) => void;
+  addBadge: (elementId: string, text: string, status: 'pending'|'running'|'success'|'failure') => string;
+  clearBadges: (elementId?: string) => void;
 };
 
 type Props = {
   xml?: string;
+  onElementClick?: (elementId: string) => void;
+  onReady?: () => void;
 };
 
-const BpmnCanvas = forwardRef<BpmnCanvasHandle, Props>(({ xml }, ref) => {
+const BpmnCanvas = forwardRef<BpmnCanvasHandle, Props>(({ xml, onElementClick, onReady }, ref) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const modelerRef = useRef<Modeler | null>(null);
 
@@ -26,11 +32,21 @@ const BpmnCanvas = forwardRef<BpmnCanvasHandle, Props>(({ xml }, ref) => {
     if (!containerRef.current) return;
     modelerRef.current = new Modeler({ container: containerRef.current });
     const modeler = modelerRef.current;
+
+    // element click selection
+    const eventBus = modeler.get('eventBus') as any;
+    eventBus.on('element.click', (e: any) => {
+      const ele = e?.element;
+      if (ele && ele.id && onElementClick) onElementClick(ele.id);
+    });
+
+    onReady?.();
+
     return () => {
       modeler.destroy();
       modelerRef.current = null;
     };
-  }, []);
+  }, [onElementClick, onReady]);
 
   useEffect(() => {
     (async () => {
@@ -92,9 +108,40 @@ const BpmnCanvas = forwardRef<BpmnCanvasHandle, Props>(({ xml }, ref) => {
       if (!modelerRef.current) return;
       (modelerRef.current.get('canvas') as any).zoom('fit-viewport');
     },
+    addMarker: (elementId, marker) => {
+      if (!modelerRef.current) return;
+      const canvas = modelerRef.current.get('canvas') as any;
+      canvas.addMarker(elementId, `marker-${marker}`);
+    },
+    clearMarkers: (elementId?: string) => {
+      if (!modelerRef.current) return;
+      const canvas = modelerRef.current.get('canvas') as any;
+      const elementRegistry = modelerRef.current.get('elementRegistry') as any;
+      const ids: string[] = elementId ? [elementId] : elementRegistry.getAll().map((e: any) => e.id);
+      ids.forEach((id) => {
+        ['pending', 'running', 'success', 'failure'].forEach((m) => canvas.removeMarker(id, `marker-${m}`));
+      });
+    },
+    addBadge: (elementId, text, status) => {
+      if (!modelerRef.current) return '';
+      const overlays = modelerRef.current.get('overlays') as any;
+      const html = document.createElement('div');
+      html.className = `run-badge ${status}`;
+      html.textContent = text;
+      const id = overlays.add(elementId, {
+        position: { top: -10, left: 0 },
+        html,
+      });
+      return id;
+    },
+    clearBadges: (elementId?: string) => {
+      if (!modelerRef.current) return;
+      const overlays = modelerRef.current.get('overlays') as any;
+      overlays.remove({ element: elementId });
+    },
   }));
 
-  return <div ref={containerRef} className="bpmn-container" />;
+  return <div className="bpmn-host"><div ref={containerRef} className="bpmn-container" /></div>;
 });
 
 export default BpmnCanvas;
